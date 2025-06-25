@@ -44,7 +44,7 @@ function isValidDate(date: Date | undefined): boolean {
   return date instanceof Date && !isNaN(date.getTime());
 }
 
-export function WeatherForm() {
+export function WeatherForm({ onSuccess }: { onSuccess: (id: string) => void }) {
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date(),
@@ -120,21 +120,31 @@ export function WeatherForm() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("Backend response:", data);
+
+        // Notify parent of new weatherId
+        if (typeof onSuccess === "function") {
+          onSuccess(data.id);
+          console.log("weatherId updated")
+        }
+
         setResult({
           success: true,
           message: "Weather request submitted successfully!",
           id: data.id,
         });
+
         // Reset form after successful submission
         const today = new Date();
         setSelectedDate(today);
         setDisplayValue(formatDateForDisplay(today));
         setFormData({
           date: formatDateForAPI(today),
-          location: "",
-          notes: "",
+                    location: "",
+                    notes: "",
         });
-      } else {
+      }
+      else {
         const errorData = await response.json();
         setResult({
           success: false,

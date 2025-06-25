@@ -1,6 +1,13 @@
+"use client";
 import { WeatherForm } from "@/components/weather-form";
+import { WeatherDisplay } from "@/components/weather-display";
+import {WeatherLookup } from "@/components/weather-lookup";
+import { useState } from "react";
 
 export default function Home() {
+
+  const [weatherId, setWeatherId] = useState<string | null>(null);
+
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-4xl mx-auto">
@@ -15,32 +22,27 @@ export default function Home() {
 
         <div className="grid gap-8 md:grid-cols-2">
           {/* Weather Form Section */}
-          <div className="flex flex-col items-center justify-start">
+          <div className="flex flex-col items-center">
             <h2 className="text-2xl font-semibold mb-4">
               Submit Weather Request
             </h2>
-            <WeatherForm />
+            {/* WeatherId gets updated in WeatherForm*/}
+            <WeatherForm onSuccess={setWeatherId} />
           </div>
 
-          {/* Data Lookup Section Placeholder */}
-          <div className="flex flex-col items-center justify-start">
-            <h2 className="text-2xl font-semibold mb-4">Lookup Weather Data</h2>
-            <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8">
-              <div className="text-muted-foreground">
-                <h3 className="text-lg font-medium mb-2">
-                  TODO: Implement Data Lookup
-                </h3>
-                <p className="text-sm">
-                  This section should allow users to enter an ID and retrieve
-                  stored weather data.
-                </p>
-                <p className="text-xs mt-2 text-muted-foreground/75">
-                  Backend GET /weather/{"{id}"} endpoint is already implemented.
-                </p>
-              </div>
-            </div>
+          {/* Weather Lookup and Display */}
+          <div className="flex flex-col items-center">
+            <h2 className="text-2xl font-semibold mb-4">
+              Weather Display
+            </h2>
+            <WeatherLookup />
+            {/* Recieve weaterId */}
+            <WeatherDisplay id={weatherId}/>
           </div>
+
         </div>
+
+
       </div>
     </div>
   );
